@@ -5,9 +5,6 @@ export default function CleanBanner() {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=DM+Sans:wght@300;400;500&display=swap');
-      `}</style>
 
       <section className="relative w-full h-screen overflow-hidden bg-black">
 
@@ -31,7 +28,6 @@ export default function CleanBanner() {
           <h1
             className="text-white leading-none tracking-tight max-w-4xl"
             style={{
-              fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(3rem, 8vw, 7rem)",
               fontWeight: 900,
             }}

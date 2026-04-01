@@ -62,7 +62,7 @@ export default function VideoRevealSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen bg-black flex items-center justify-center overflow-hidden"
+      className="relative h-screen bg-[#000] flex items-center justify-center overflow-hidden"
     >
 
       {/* TOP TEXT */}
@@ -77,7 +77,7 @@ export default function VideoRevealSection() {
       >
         <video
           ref={videoRef}
-          src="/7180172-hd_1920_1080_25fps.mp4"
+          src="/From Main Klickpin CF- Multi Frame Opener - 2zjzlhZys (1).mp4"
           muted
           loop
           autoPlay

@@ -1,123 +1,150 @@
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+const logos = [
+  "/logo/blend.png",
+  "/logo/Babus.png",
+  "/logo/Mavi.png",
+  "/logo/VHS.png",
+  "/logo/VillaGulposh.png",
+];
 
 export default function HeroBanner() {
+  const heroInnerRef = useRef(null);
   const sectionRef = useRef(null);
-  const wrapperRef = useRef(null);
-  const imageRef = useRef(null);
-  const textRef = useRef(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    const handleScroll = () => {
+      const section = sectionRef.current;
+      const inner = heroInnerRef.current;
+      if (!section || !inner) return;
 
-      /* ENTRY */
-      const entry = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      });
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
 
-      entry.from(imageRef.current, {
-        scale: 1.25,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power2.out",
-      });
-
-      entry.from(
-        textRef.current,
-        {
-          y: 40,
-          opacity: 0,
-          duration: 1.2,
-          ease: "power2.out",
-        },
-        "-=0.5"
+      /**
+       * Progress when next section overlaps:
+       * starts when section top hits top (0)
+       * ends when section bottom reaches top
+       */
+      const progress = Math.min(
+        Math.max(-rect.top / (rect.height - vh), 0),
+        1
       );
 
-      /* SCROLL */
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.5,
-          pin: true,
-          pinSpacing: false,
-        },
-      });
+      // ONLY SCALE (no opacity fade)
+      const scale = 1 - progress * 0.15;
+      const radius = progress * 24;
 
-      tl.to(wrapperRef.current, {
-        scale: 0.80,
-        y: -30,
-        ease: "none",
-      });
+      inner.style.transform = `scale(${scale})`;
+      inner.style.borderRadius = `${radius}px`;
+    };
 
-    }, sectionRef);
-
-    return () => ctx.revert();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="
-        relative
-        h-screen
-        bg-[#000]
-        flex flex-col items-center
-        overflow-hidden
-        pt-[120px]
-      "
-    >
-      
-      {/* WRAPPER */}
+    <>
+      {/* ─── HERO WRAPPER ─── */}
       <div
-        ref={wrapperRef}
-        className="w-full h-full flex flex-col items-center"
+        ref={sectionRef}
+        className="relative"
+        style={{ height: "200vh" }}
       >
-        
-        {/* TEXT */}
-        <div ref={textRef} className="text-center mb-2">
-          <h1 className="text-4xl md:text-6xl font-semibold tracking-wide text-[#fec315]">
-            CREATIVE TEAM
-          </h1>
+        {/* Sticky container */}
+        <div className="sticky top-0 w-full overflow-hidden h-screen">
 
-          <p className="mt-2 text-gray-500 text-lg">
-            We build experiences that matter
-          </p>
+          {/* INNER */}
+          <div
+            ref={heroInnerRef}
+            className="w-full h-full bg-white flex items-center justify-center origin-top"
+            style={{
+              willChange: "transform, border-radius",
+            }}
+          >
+            <div className="w-full max-w-[1300px] px-5 grid grid-cols-2 items-center gap-8">
+
+              {/* LEFT */}
+              <div className="flex flex-col justify-center">
+
+                <img
+                  src="/Year zero.svg"
+                  alt="Year Zero"
+                  className="w-[650px] mb-40"
+                />
+
+                {/* ─── LOGO SLIDER ─── */}
+                <div className="relative w-full overflow-hidden mb-8 h-[80px] group">
+
+                  {/* Gradient fades */}
+                  <div className="absolute left-0 top-0 h-full w-14 z-10 pointer-events-none bg-gradient-to-r from-white to-transparent" />
+                  <div className="absolute right-0 top-0 h-full w-14 z-10 pointer-events-none bg-gradient-to-l from-white to-transparent" />
+
+                  <div className="logo-track flex items-center gap-8">
+                    {[...logos, ...logos].map((logo, i) => (
+                      <img
+                        key={i}
+                        src={logo}
+                        alt="brand"
+                        className="logo-item h-16 object-contain flex-shrink-0"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-[17px] text-black/90 leading-[1.45] max-w-[500px]">
+                  Since its inception, ADVOLVE has grown into a creative partner for
+                  brands across industries, bringing together strategy, storytelling
+                  and design to create meaningful communication.
+                </p>
+              </div>
+
+              {/* RIGHT */}
+              <div className="flex justify-center items-center h-full">
+                <img
+                  src="/Adteam.png"
+                  alt="ADVOLVE Team"
+                  className="w-full max-w-[630px] object-contain"
+                />
+              </div>
+
+            </div>
+          </div>
         </div>
-
-        {/* IMAGE (AUTO FIT FIX) */}
-        <div
-          ref={imageRef}
-          className="
-            w-full 
-            flex 
-            justify-center 
-            items-end 
-            flex-1   /* 👈 THIS IS IMPORTANT */
-          "
-        >
-          <img
-            src="/team-1.png"
-            alt="Team"
-            className="
-              w-[90%]
-              max-h-[80vh]   /* 👈 LIMIT HEIGHT */
-              object-cover
-              
-            "
-          />
-        </div>
-
       </div>
 
-    </section>
+      {/* ─── STYLES ─── */}
+      <style>{`
+        /* ─── LOGO MARQUEE ─── */
+        .logo-track {
+          width: max-content;
+          animation: marquee 20s linear infinite;
+        }
+
+        /* Pause on hover */
+        .group:hover .logo-track {
+          animation-play-state: paused;
+        }
+
+        /* LOGO STYLE */
+        .logo-item {
+          filter: grayscale(100%);
+          opacity: 0.6;
+          transition: all 0.4s ease;
+        }
+
+        .logo-item:hover {
+          filter: grayscale(0%);
+          opacity: 1;
+          transform: scale(1.05);
+        }
+
+        /* Infinite seamless loop */
+        @keyframes marquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+    </>
   );
 }

@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import "./index.css";
+
 import Header from "./component/Header";
 import SmoothScroll from "./component/SmoothScroll";
 
@@ -9,6 +11,10 @@ import ServiceSection from "./Home/ServiceSection";
 import Casestudysection from "./Home/Casestudysection";
 import AboutSection from "./Home/Aboutsection";
 import TestimonialSection from "./Home/Testimonialsection1";
+import NewServices from "./Home/NewServices";
+
+import HomeBanner1 from "./Home1/HomeBanner1";
+import HomeBanner2 from "./Home2/HomeBanner2";
 
 import SocialMedia from "./Service/SocialMedia";
 import AudioVisual from "./Service/AudioVisual";
@@ -19,6 +25,8 @@ import SEO from "./Service/SEO";
 
 import Services from "./Service/Services";
 import WorkCulture from "./WorkCulture/WorkCulture";
+import Clientele from "./Clientele/Clientele";
+
 
 
 function HomePage() {
@@ -26,10 +34,32 @@ function HomePage() {
     <>
       <HeroBanner />
       <VideoRevealSection />
-      <ServiceSection />
+     <NewServices />
       <Casestudysection />
       <AboutSection />
       <TestimonialSection />
+    </>
+
+  );
+}
+
+function HomePage1() {
+  return (
+    <>
+      <HomeBanner1 />
+      <VideoRevealSection />
+     <NewServices />
+    </>
+
+  );
+}
+
+function HomePage2() {
+  return (
+    <>
+      <HomeBanner2 />
+      <VideoRevealSection />
+      <NewServices />
     </>
 
   );
@@ -44,8 +74,11 @@ export default function App() {
       <Routes>
         {/* HOME */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/home1" element={<HomePage1 />} />
+        <Route path="/home2" element={<HomePage2 />} />
         <Route path="/service" element={<Services />} />
         <Route path="/work-culture" element={<WorkCulture />} />
+        <Route path="/clientele" element={<Clientele />} />
 
         {/* INDIVIDUAL SERVICE PAGES */}
         <Route path="/service/social-media" element={<SocialMedia />} />
